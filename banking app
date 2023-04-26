@@ -1,0 +1,132 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class BankingApplication {
+
+    static ArrayList<Account> accounts = new ArrayList<Account>();
+    static Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+
+        boolean quit = false;
+        int choice;
+
+        while (!quit) {
+            System.out.println("Enter your choice:");
+            System.out.println("1. Add New Account");
+            System.out.println("2. Change Address of the customer");
+            System.out.println("3. Check Account balance");
+            System.out.println("4. Update Account balance");
+            System.out.println("5. Summary of All Accounts");
+            System.out.println("6. Quit");
+
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    addAccount();
+                    break;
+                case 2:
+                    changeAddress();
+                    break;
+                case 3:
+                    checkBalance();
+                    break;
+                case 4:
+                    updateBalance();
+                    break;
+                case 5:
+                    printSummary();
+                    break;
+                case 6:
+                    quit = true;
+                    System.out.println("Exiting the program...");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Please try again.");
+                    break;
+            }
+        }
+
+        scanner.close();
+    }
+
+    private static void addAccount() {
+        System.out.println("Enter customer name:");
+        String customerName = scanner.nextLine();
+        System.out.println("Enter initial amount:");
+        double initialAmount = scanner.nextDouble();
+        scanner.nextLine(); // to clear the buffer
+
+        Account account = new Account(customerName, initialAmount);
+        accounts.add(account);
+
+        System.out.println("New account created successfully with account Id " + account.getAccountId());
+    }
+
+    private static void changeAddress() {
+        System.out.println("Enter account Id:");
+        int accountId = scanner.nextInt();
+        scanner.nextLine(); // to clear the buffer
+
+        Account account = findAccount(accountId);
+
+        if (account == null) {
+            System.out.println("Account with Id " + accountId + " not found.");
+            return;
+        }
+
+        System.out.println("Enter new address:");
+        String newAddress = scanner.nextLine();
+        account.setAddress(newAddress);
+
+        System.out.println("Address updated successfully.");
+    }
+
+    private static void checkBalance() {
+        System.out.println("Enter account Id:");
+        int accountId = scanner.nextInt();
+        scanner.nextLine(); // to clear the buffer
+
+        Account account = findAccount(accountId);
+
+        if (account == null) {
+            System.out.println("Account with Id " + accountId + " not found.");
+            return;
+        }
+
+        System.out.println("Balance for account Id " + accountId + " is " + account.getBalance());
+    }
+
+    private static void updateBalance() {
+        System.out.println("Enter account Id:");
+        int accountId = scanner.nextInt();
+        scanner.nextLine(); // to clear the buffer
+
+        Account account = findAccount(accountId);
+
+        if (account == null) {
+            System.out.println("Account with Id " + accountId + " not found.");
+            return;
+        }
+
+        System.out.println("Enter amount to update:");
+        double amount = scanner.nextDouble();
+        scanner.nextLine(); // to clear the buffer
+
+        account.updateBalance(amount);
+        System.out.println("Balance updated successfully.");
+    }
+
+    private static void printSummary() {
+        if (accounts.isEmpty()) {
+            System.out.println("No accounts found.");
+            return;
+        }
+
+        System.out.println("Summary of all accounts:");
+        System.out.println("Account Id\tCustomer Name\tAddress\t\tBalance");
+
+        for (Account account : accounts) {
+            System.out.println(account.getAccountId() + "\t\t" + account
